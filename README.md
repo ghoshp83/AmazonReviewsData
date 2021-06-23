@@ -173,3 +173,7 @@ cqlsh:takeaway> select count(1) from testratmtv_dd;
 
 (1 rows)
 ```
+
+# CI/CD Process
+
+TBD
