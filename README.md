@@ -103,3 +103,69 @@ INSERT OVERWRITE TABLE takeaway.testratmtv_dd select custid, movid, rat, from_un
 5 rows selected (106.304 seconds)
 ```
 
+
+Let's discuss about Java approach. 
+
+# Java ways
+
+Java process has two main classes : 
+1. TakeAwayTaskDataGenerator : To pull the data from internal and push it to cassandra.
+2. TakeAwayTaskDataConsumer : To pull the data from cassandra and display the result. This will give the answer for the case study.
+
+# Step 1 : 
+===============================
+1. To run the application for data generation, use the command -> ``` java -cp TkTasks-1.0-1.jar com.takeaway.task.TakeAwayTaskDataGenerator <url_location> <csv_location> ```
+2. Example of args - ``` http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/ratings_Movies_and_TV.csv C:/Pralay/takeaway/task/java_process/new.csv ```
+3. Also need below system variables for cassandra connection : ``` cassandraHost=localhost;cassandraPort=9042;cassandraKeySpace=takeaway;cassandraReadConsistency=QUORUM;cassandraWriteConsistency=QUORUM ```
+
+# Step 2 : 
+===============================
+1. To run the application for data consumption/computation, use java command -> java -cp TkTasks-1.0-1.jar com.takeaway.task.TakeAwayTaskDataConsumer <rating_month_user_input> <data_limit_user_input>
+2. Example of args - 10 5 {for month 10 and to limit data to 5 records}
+3. Also need below system variables for cassandra connection : cassandraHost=localhost;cassandraPort=9042;cassandraKeySpace=takeaway;cassandraReadConsistency=QUORUM;cassandraWriteConsistency=QUORUM
+
+For cassandra I have use below configurations.
+Version - ``` apache-cassandra-3.11.10; cqlsh 5.0.1 | Cassandra 3.11.10 | CQL spec 3.4.4 | Native protocol v4 ```
+
+C:\~\apache-cassandra-3.11.10\bin>nodetool status
+```
+Datacenter: datacenter1
+========================
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address    Load       Tokens       Owns (effective)  Host ID                               Rack
+UN  127.0.0.1  174.42 MiB  256          100.0%            69336db9-bdfc-4779-af3b-32c29bb2288b  rack1
+```
+
+# Cassandra keyspace and table details : 
+======================================
+```
+CREATE TABLE IF NOT EXISTS testratmtv_dd(
+user text,
+item text, 
+rating text,
+rattimestamp text,
+rating_val double,
+ratdate text,
+ratmonth int, 
+ratyear int,
+PRIMARY KEY(item,user)
+);
+```
+
+```
+drop keyspace if exists takeaway;
+CREATE KEYSPACE takeaway WITH replication = {'class':'SimpleStrategy', 'replication_factor':1};
+use takeaway;
+```
+# To show the ingested data count : 
+==================================================
+```
+cqlsh:takeaway> select count(1) from testratmtv_dd;
+
+ count
+---------
+ 4607047
+
+(1 rows)
+```
