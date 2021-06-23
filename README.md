@@ -11,6 +11,10 @@ Metadata: http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/meta_M
 
 Details of the Dataset : http://jmcauley.ucsd.edu/data/amazon/links.html
 
+# Expected Output
+1. The top 5 and bottom 5 movies in terms of overall average review ratings for a given month.
+2. For a given month, Find the 5 movies whose average monthly ratings increased the most compared with the previous month.
+
 # Solution
 I approached this problem in two ways. 
 1. Using Hive
