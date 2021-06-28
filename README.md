@@ -113,20 +113,20 @@ Let's discuss about Java approach.
 # Java ways
 
 Java process has two main classes : 
-1. TakeAwayTaskDataGenerator : To pull the data from internal and push it to cassandra.
-2. TakeAwayTaskDataConsumer : To pull the data from cassandra and display the result. This will give the answer for the case study.
+1. AmazonReviewTaskDataGenerator : To pull the data from internal and push it to cassandra.
+2. AmazonReviewTaskDataConsumer : To pull the data from cassandra and display the result. This will give the answer for the case study.
 
 # Step 1 : 
 ===============================
-1. To run the application for data generation, use the command -> ``` java -cp TkTasks-1.0-1.jar com.takeaway.task.TakeAwayTaskDataGenerator <url_location> <csv_location> ```
+1. To run the application for data generation, use the command -> ``` java -cp AmazonReviewTasks-1.0-1.jar com.amazonreview.task.AmazonReviewTaskDataConsumer <url_location> <csv_location> ```
 2. Example of args - ``` http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/ratings_Movies_and_TV.csv C:/Pralay/takeaway/task/java_process/new.csv ```
 3. Also need below system variables for cassandra connection : ``` cassandraHost=localhost;cassandraPort=9042;cassandraKeySpace=takeaway;cassandraReadConsistency=QUORUM;cassandraWriteConsistency=QUORUM ```
 
 # Step 2 : 
 ===============================
-1. To run the application for data consumption/computation, use java command -> java -cp TkTasks-1.0-1.jar com.takeaway.task.TakeAwayTaskDataConsumer <rating_month_user_input> <data_limit_user_input>
-2. Example of args - 10 5 {for month 10 and to limit data to 5 records}
-3. Also need below system variables for cassandra connection : cassandraHost=localhost;cassandraPort=9042;cassandraKeySpace=takeaway;cassandraReadConsistency=QUORUM;cassandraWriteConsistency=QUORUM
+1. To run the application for data consumption/computation, use java command -> ```java -cp AmazonReviewTasks-1.0-1.jar com.amazonreview.task.AmazonReviewTaskDataConsumer <rating_month_user_input> <data_limit_user_input> ```
+2. Example of args - ```10 5 ``` {for month 10 and to limit data to 5 records}
+3. Also need below system variables for cassandra connection : ``` cassandraHost=localhost;cassandraPort=9042;cassandraKeySpace=takeaway;cassandraReadConsistency=QUORUM;cassandraWriteConsistency=QUORUM ```
 
 For cassandra I have use below configurations.
 Version - ``` apache-cassandra-3.11.10; cqlsh 5.0.1 | Cassandra 3.11.10 | CQL spec 3.4.4 | Native protocol v4 ```
