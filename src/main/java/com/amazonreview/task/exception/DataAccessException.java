@@ -1,4 +1,4 @@
-package com.takeaway.task.exception;
+package com.amazonreview.task.exception;
 
 public class DataAccessException extends Exception {
     /** The Constant serialVersionUID. */

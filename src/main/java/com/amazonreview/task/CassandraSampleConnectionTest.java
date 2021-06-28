@@ -1,4 +1,4 @@
-package com.takeaway.task;
+package com.amazonreview.task;
 
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.Session;

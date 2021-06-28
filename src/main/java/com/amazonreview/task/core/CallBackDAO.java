@@ -1,8 +1,8 @@
-package com.takeaway.task.core;
+package com.amazonreview.task.core;
 
 
-import com.takeaway.task.constants.TakeAwayConstants;
-import com.takeaway.task.exception.ConnectionException;
+import com.amazonreview.task.constants.AmazonReviewConstants;
+import com.amazonreview.task.exception.ConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +40,7 @@ public class CallBackDAO {
         logger.info("Entry of populateAllRecords");
         boolean result = false;
         try{
-            dao.writeRecords(TakeAwayConstants.CASSANDRA_TAB_NAME_MOVIE_RATING, valueArgs);
+            dao.writeRecords(AmazonReviewConstants.CASSANDRA_TAB_NAME_MOVIE_RATING, valueArgs);
             result=true;
         }catch(Exception ex){
             logger.error("Failed to populate Rating data..."+ex);

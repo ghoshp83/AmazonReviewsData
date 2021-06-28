@@ -1,11 +1,12 @@
-package com.takeaway.task.core;
+package com.amazonreview.task.core;
 
+import com.amazonreview.task.constants.AmazonReviewConstants;
+import com.amazonreview.task.exception.ConnectionException;
+import com.amazonreview.task.exception.DataAccessException;
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.querybuilder.Insert;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.datastax.driver.core.querybuilder.Select;
-import com.takeaway.task.exception.*;
-import com.takeaway.task.constants.TakeAwayConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -155,8 +156,8 @@ public class CassandraCqlDatastore implements Serializable {
     public String[] getServers(String delimitedServerNames) {
         logger.info(" Begining of method getServers ");
         String[] serverNames = null;
-        if (delimitedServerNames != null && delimitedServerNames.contains(TakeAwayConstants.CS_DELIMITER_COMMA)) {
-            serverNames = delimitedServerNames.split(TakeAwayConstants.CS_DELIMITER_COMMA);
+        if (delimitedServerNames != null && delimitedServerNames.contains(AmazonReviewConstants.CS_DELIMITER_COMMA)) {
+            serverNames = delimitedServerNames.split(AmazonReviewConstants.CS_DELIMITER_COMMA);
         } else {
             serverNames = new String[1];
             serverNames[0] = delimitedServerNames;
@@ -196,9 +197,9 @@ public class CassandraCqlDatastore implements Serializable {
      */
     public List<Map<String, Object>> selectQuery(String table,int ratmonth,boolean allowFiltering) {
         logger.info("Begining of method selectQuery");
-        Select select = QueryBuilder.select().avg(TakeAwayConstants.ADDITIONAL_FIELD_RATING_VAL).as(TakeAwayConstants.ADDITIONAL_FIELD_RATING_VAL_AVG)
-                .column(TakeAwayConstants.FIELD_ITEM_NAME).from(config.getKeySpace(), table).where(QueryBuilder.eq(TakeAwayConstants.ADDITIONAL_FIELD_MONTH,ratmonth))
-                .groupBy(TakeAwayConstants.FIELD_ITEM_NAME,TakeAwayConstants.FIELD_USER_NAME);
+        Select select = QueryBuilder.select().avg(AmazonReviewConstants.ADDITIONAL_FIELD_RATING_VAL).as(AmazonReviewConstants.ADDITIONAL_FIELD_RATING_VAL_AVG)
+                .column(AmazonReviewConstants.FIELD_ITEM_NAME).from(config.getKeySpace(), table).where(QueryBuilder.eq(AmazonReviewConstants.ADDITIONAL_FIELD_MONTH,ratmonth))
+                .groupBy(AmazonReviewConstants.FIELD_ITEM_NAME, AmazonReviewConstants.FIELD_USER_NAME);
         if (allowFiltering) {
             select.allowFiltering();
         }

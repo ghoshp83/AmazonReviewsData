@@ -1,4 +1,4 @@
-package com.takeaway.task.core;
+package com.amazonreview.task.core;
 
 
 public class CassandraConfig {

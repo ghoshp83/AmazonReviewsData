@@ -1,6 +1,6 @@
-package com.takeaway.task.core;
+package com.amazonreview.task.core;
 
-import com.takeaway.task.exception.ConnectionException;
+import com.amazonreview.task.exception.ConnectionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

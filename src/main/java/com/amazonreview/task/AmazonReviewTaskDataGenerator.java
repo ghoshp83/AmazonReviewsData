@@ -1,11 +1,11 @@
-package com.takeaway.task;
+package com.amazonreview.task;
 
+import com.amazonreview.task.constants.AmazonReviewConstants;
+import com.amazonreview.task.error.AmazonReviewError;
+import com.amazonreview.task.util.AmazonReviewUtility;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-import com.takeaway.task.constants.TakeAwayConstants;
-import com.takeaway.task.error.TakeAwayError;
-import com.takeaway.task.util.TakeAwayUtility;
 import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,18 +29,18 @@ import java.util.Map;
 import static java.time.ZonedDateTime.now;
 
 
-public class TakeAwayTaskDataGenerator {
-    private static TakeAwayUtility takeawayUtil;
-    private static final Logger logger = LoggerFactory.getLogger(TakeAwayTaskDataGenerator.class);
+public class AmazonReviewTaskDataGenerator {
+    private static AmazonReviewUtility takeawayUtil;
+    private static final Logger logger = LoggerFactory.getLogger(AmazonReviewTaskDataGenerator.class);
     public static void main(String[] args){
         BasicConfigurator.configure();
         logger.info("Starting of TakeAway DG App...");
-        String cassanadraHost = System.getenv(TakeAwayConstants.CASSANDRA_HOST);
-        String cassanadraPort = System.getenv(TakeAwayConstants.CASSANDRA_PORT);
-        String cassanadraKeySpace = System.getenv(TakeAwayConstants.CASSANDRA_KEYSPACE);
+        String cassanadraHost = System.getenv(AmazonReviewConstants.CASSANDRA_HOST);
+        String cassanadraPort = System.getenv(AmazonReviewConstants.CASSANDRA_PORT);
+        String cassanadraKeySpace = System.getenv(AmazonReviewConstants.CASSANDRA_KEYSPACE);
         logger.info("Cassandra Host {} , Cassandra Port {}, Cassandra KeySpace {}",cassanadraHost,cassanadraPort,cassanadraKeySpace);
         if( cassanadraHost==null || cassanadraPort==null || cassanadraKeySpace==null) {
-            logger.error(TakeAwayError.TakeAwayError0.getErrorMsg());
+            logger.error(AmazonReviewError.TakeAwayError0.getErrorMsg());
             logger.error("'cassandraHost','cassandraPort','cassandraKeySpace' are to be set");
             stopServer();
         }
@@ -73,7 +73,7 @@ public class TakeAwayTaskDataGenerator {
             logger.info("Adding header {}",now());
             Path filePath = Paths.get(csvLocation);
             List<String> lines = Files.readAllLines(filePath);
-            lines.add(0, TakeAwayConstants.CSV_HEADER);
+            lines.add(0, AmazonReviewConstants.CSV_HEADER);
             Files.write(filePath, lines);
             logger.info("Finished header {}",now());
         }catch (Exception e){
@@ -93,25 +93,25 @@ public class TakeAwayTaskDataGenerator {
      * Fetching Date in yyyy-MM-dd format
      */
     public static String getDateFromEpoch(Long epoch){
-        ZonedDateTime dateTime = Instant.ofEpochSecond(epoch).atZone(ZoneId.of(TakeAwayConstants.TAKEAWAY_ZONE));
-        return dateTime.format(DateTimeFormatter.ofPattern(TakeAwayConstants.TAKEAWAY_DATE_FORMAT));
+        ZonedDateTime dateTime = Instant.ofEpochSecond(epoch).atZone(ZoneId.of(AmazonReviewConstants.TAKEAWAY_ZONE));
+        return dateTime.format(DateTimeFormatter.ofPattern(AmazonReviewConstants.TAKEAWAY_DATE_FORMAT));
     }
     /**
      * Fetching Month
      */
     public static int getMonthFromEpoch(Long epoch){
-        ZonedDateTime dateTime = Instant.ofEpochSecond(epoch).atZone(ZoneId.of(TakeAwayConstants.TAKEAWAY_ZONE));
-        LocalDate localDate = LocalDate.parse( dateTime.format(DateTimeFormatter.ofPattern(TakeAwayConstants.TAKEAWAY_DATE_FORMAT)),
-                DateTimeFormatter.ofPattern(TakeAwayConstants.TAKEAWAY_DATE_FORMAT) );
+        ZonedDateTime dateTime = Instant.ofEpochSecond(epoch).atZone(ZoneId.of(AmazonReviewConstants.TAKEAWAY_ZONE));
+        LocalDate localDate = LocalDate.parse( dateTime.format(DateTimeFormatter.ofPattern(AmazonReviewConstants.TAKEAWAY_DATE_FORMAT)),
+                DateTimeFormatter.ofPattern(AmazonReviewConstants.TAKEAWAY_DATE_FORMAT) );
         return localDate.getMonthValue();
     }
     /**
      * Fetching Year
      */
     public static int getYearFromEpoch(Long epoch){
-        ZonedDateTime dateTime = Instant.ofEpochSecond(epoch).atZone(ZoneId.of(TakeAwayConstants.TAKEAWAY_ZONE));
-        LocalDate localDate = LocalDate.parse( dateTime.format(DateTimeFormatter.ofPattern(TakeAwayConstants.TAKEAWAY_DATE_FORMAT)),
-                DateTimeFormatter.ofPattern(TakeAwayConstants.TAKEAWAY_DATE_FORMAT) );
+        ZonedDateTime dateTime = Instant.ofEpochSecond(epoch).atZone(ZoneId.of(AmazonReviewConstants.TAKEAWAY_ZONE));
+        LocalDate localDate = LocalDate.parse( dateTime.format(DateTimeFormatter.ofPattern(AmazonReviewConstants.TAKEAWAY_DATE_FORMAT)),
+                DateTimeFormatter.ofPattern(AmazonReviewConstants.TAKEAWAY_DATE_FORMAT) );
         return localDate.getYear();
     }
     /**
@@ -128,7 +128,7 @@ public class TakeAwayTaskDataGenerator {
      * @param cassanadraKeySpace -- Cassandra Key Space
      */
     private static synchronized void initCassandraUtility(String cassanadraHost,String cassanadraPort,String cassanadraKeySpace) {
-        takeawayUtil = new TakeAwayUtility(cassanadraHost,Integer.parseInt(cassanadraPort),cassanadraKeySpace);
+        takeawayUtil = new AmazonReviewUtility(cassanadraHost,Integer.parseInt(cassanadraPort),cassanadraKeySpace);
     }
     /**
      * To download data from url
@@ -146,10 +146,10 @@ public class TakeAwayTaskDataGenerator {
             logger.info("Total rows {}", datas.size());
             datas.stream().forEach((data) -> {
                 try {
-                    data.put(TakeAwayConstants.ADDITIONAL_FIELD_DATE, getDateFromEpoch(Long.valueOf(data.get(TakeAwayConstants.FIELD_TIMESTAMP_NAME).toString())));
-                    data.put(TakeAwayConstants.ADDITIONAL_FIELD_MONTH, getMonthFromEpoch(Long.valueOf(data.get(TakeAwayConstants.FIELD_TIMESTAMP_NAME).toString())));
-                    data.put(TakeAwayConstants.ADDITIONAL_FIELD_YEAR, getYearFromEpoch(Long.valueOf(data.get(TakeAwayConstants.FIELD_TIMESTAMP_NAME).toString())));
-                    data.put(TakeAwayConstants.ADDITIONAL_FIELD_RATING_VAL, Double.valueOf(data.get(TakeAwayConstants.FIELD_RATING_NAME).toString()));
+                    data.put(AmazonReviewConstants.ADDITIONAL_FIELD_DATE, getDateFromEpoch(Long.valueOf(data.get(AmazonReviewConstants.FIELD_TIMESTAMP_NAME).toString())));
+                    data.put(AmazonReviewConstants.ADDITIONAL_FIELD_MONTH, getMonthFromEpoch(Long.valueOf(data.get(AmazonReviewConstants.FIELD_TIMESTAMP_NAME).toString())));
+                    data.put(AmazonReviewConstants.ADDITIONAL_FIELD_YEAR, getYearFromEpoch(Long.valueOf(data.get(AmazonReviewConstants.FIELD_TIMESTAMP_NAME).toString())));
+                    data.put(AmazonReviewConstants.ADDITIONAL_FIELD_RATING_VAL, Double.valueOf(data.get(AmazonReviewConstants.FIELD_RATING_NAME).toString()));
                     takeawayUtil.populateCSDB(data);
                 } catch (Exception e) {
                     e.printStackTrace();

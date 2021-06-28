@@ -1,6 +1,6 @@
-package com.takeaway.task.constants;
+package com.amazonreview.task.constants;
 
-public class TakeAwayConstants {
+public class AmazonReviewConstants {
     public static final String CSV_HEADER="user,item,rating,rattimestamp";
     public static final String TAKEAWAY_ZONE="GMT";
     public static final String TAKEAWAY_DATE_FORMAT="yyyy-MM-dd";

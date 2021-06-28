@@ -1,25 +1,24 @@
-package com.takeaway.task.util;
+package com.amazonreview.task.util;
 
-import com.takeaway.task.TakeAwayTaskDataGenerator;
-import com.takeaway.task.core.CallBackDAO;
-import com.takeaway.task.core.CassandraConfig;
-import com.takeaway.task.core.CassandraCqlDatastore;
-import com.takeaway.task.core.DSConfigDAO;
-import com.takeaway.task.error.TakeAwayError;
-import com.takeaway.task.exception.ConnectionException;
+import com.amazonreview.task.error.AmazonReviewError;
+import com.amazonreview.task.exception.ConnectionException;
+import com.amazonreview.task.AmazonReviewTaskDataGenerator;
+import com.amazonreview.task.core.CallBackDAO;
+import com.amazonreview.task.core.CassandraConfig;
+import com.amazonreview.task.core.CassandraCqlDatastore;
+import com.amazonreview.task.core.DSConfigDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.util.*;
 
-public class TakeAwayUtility {
-    private static final Logger logger = LoggerFactory.getLogger(TakeAwayTaskDataGenerator.class);
+public class AmazonReviewUtility {
+    private static final Logger logger = LoggerFactory.getLogger(AmazonReviewTaskDataGenerator.class);
     private DSConfigDAO dsConfigurationDAO = null;
     private CallBackDAO cbDAO =null;
 
-    public TakeAwayUtility(String cassandraHost,int cassandraPort, String keySpace){
+    public AmazonReviewUtility(String cassandraHost, int cassandraPort, String keySpace){
         CassandraCqlDatastore cqlds = new CassandraCqlDatastore(new CassandraConfig(cassandraHost, "", keySpace, cassandraPort));
         dsConfigurationDAO = new DSConfigDAO(cqlds);
         cbDAO = new CallBackDAO(cqlds);
@@ -27,7 +26,7 @@ public class TakeAwayUtility {
             cbDAO.register();
             dsConfigurationDAO.register();
         } catch (ConnectionException e) {
-            logger.error(TakeAwayError.TakeAwayError0.getErrorMsg(),e);
+            logger.error(AmazonReviewError.TakeAwayError0.getErrorMsg(),e);
         }
     }
     /**

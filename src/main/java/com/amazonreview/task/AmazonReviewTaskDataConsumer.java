@@ -1,8 +1,8 @@
-package com.takeaway.task;
+package com.amazonreview.task;
 
-import com.takeaway.task.constants.TakeAwayConstants;
-import com.takeaway.task.error.TakeAwayError;
-import com.takeaway.task.util.TakeAwayUtility;
+import com.amazonreview.task.constants.AmazonReviewConstants;
+import com.amazonreview.task.error.AmazonReviewError;
+import com.amazonreview.task.util.AmazonReviewUtility;
 import org.apache.log4j.BasicConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,22 +12,21 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 
-public class TakeAwayTaskDataConsumer {
-    private static TakeAwayUtility takeawayUtil;
-    private static final Logger logger = LoggerFactory.getLogger(TakeAwayTaskDataGenerator.class);
+public class AmazonReviewTaskDataConsumer {
+    private static AmazonReviewUtility takeawayUtil;
+    private static final Logger logger = LoggerFactory.getLogger(AmazonReviewTaskDataGenerator.class);
     public static void main(String[] args){
         BasicConfigurator.configure();
         logger.info("Starting of TakeAway DC App...");
-        String cassanadraHost = System.getenv(TakeAwayConstants.CASSANDRA_HOST);
-        String cassanadraPort = System.getenv(TakeAwayConstants.CASSANDRA_PORT);
-        String cassanadraKeySpace = System.getenv(TakeAwayConstants.CASSANDRA_KEYSPACE);
+        String cassanadraHost = System.getenv(AmazonReviewConstants.CASSANDRA_HOST);
+        String cassanadraPort = System.getenv(AmazonReviewConstants.CASSANDRA_PORT);
+        String cassanadraKeySpace = System.getenv(AmazonReviewConstants.CASSANDRA_KEYSPACE);
         logger.info("Cassandra Host {} , Cassandra Port {}, Cassandra KeySpace {}",cassanadraHost,cassanadraPort,cassanadraKeySpace);
         if( cassanadraHost==null || cassanadraPort==null || cassanadraKeySpace==null) {
-            logger.error(TakeAwayError.TakeAwayError0.getErrorMsg());
+            logger.error(AmazonReviewError.TakeAwayError0.getErrorMsg());
             logger.error("'cassandraHost','cassandraPort','cassandraKeySpace' are to be set");
             stopServer();
         }
@@ -52,7 +51,7 @@ public class TakeAwayTaskDataConsumer {
      * @param cassanadraKeySpace -- Cassandra Key Space
      */
     private static synchronized void initCassandraUtility(String cassanadraHost,String cassanadraPort,String cassanadraKeySpace) {
-        takeawayUtil = new TakeAwayUtility(cassanadraHost,Integer.parseInt(cassanadraPort),cassanadraKeySpace);
+        takeawayUtil = new AmazonReviewUtility(cassanadraHost,Integer.parseInt(cassanadraPort),cassanadraKeySpace);
     }
     /**
      * To fetch data from cassandra
@@ -63,7 +62,7 @@ public class TakeAwayTaskDataConsumer {
         List<Map<String, Object>> data_combined = null;
         logger.info("Entry of dataFetch");
         try{
-            data = takeawayUtil.selectDataUtil(TakeAwayConstants.CASSANDRA_TAB_NAME_MOVIE_RATING,ratmonth);
+            data = takeawayUtil.selectDataUtil(AmazonReviewConstants.CASSANDRA_TAB_NAME_MOVIE_RATING,ratmonth);
         }catch (Exception e){
             logger.error("Failed to fetch data {}",e.getMessage());
         }
@@ -74,7 +73,7 @@ public class TakeAwayTaskDataConsumer {
         descendingMovieOrder(data.stream().distinct().collect(Collectors.toList()), limit);
 
         try{
-            data_prevMonth = takeawayUtil.selectDataUtil(TakeAwayConstants.CASSANDRA_TAB_NAME_MOVIE_RATING,ratmonth-1);
+            data_prevMonth = takeawayUtil.selectDataUtil(AmazonReviewConstants.CASSANDRA_TAB_NAME_MOVIE_RATING,ratmonth-1);
         }catch (Exception e){
             logger.error("Failed to fetch data {}",e.getMessage());
         }
@@ -138,8 +137,8 @@ public class TakeAwayTaskDataConsumer {
      */
     public static Comparator<Map<String, Object>> mapComparator = new Comparator<Map<String, Object>>() {
         public int compare(Map<String, Object> m1, Map<String, Object> m2) {
-            return Double.valueOf(m1.get(TakeAwayConstants.ADDITIONAL_FIELD_RATING_VAL_AVG).toString())
-                    .compareTo(Double.valueOf(m2.get(TakeAwayConstants.ADDITIONAL_FIELD_RATING_VAL_AVG).toString()));
+            return Double.valueOf(m1.get(AmazonReviewConstants.ADDITIONAL_FIELD_RATING_VAL_AVG).toString())
+                    .compareTo(Double.valueOf(m2.get(AmazonReviewConstants.ADDITIONAL_FIELD_RATING_VAL_AVG).toString()));
         }
     };
 }
